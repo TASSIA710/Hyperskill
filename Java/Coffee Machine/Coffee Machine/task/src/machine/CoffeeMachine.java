@@ -4,42 +4,115 @@ import java.util.Scanner;
 
 public class CoffeeMachine {
 
-    private static final String[] STEPS = {
-            "Starting to make a coffee",
-            "Grinding coffee beans",
-            "Boiling water",
-            "Mixing boiled water with crushed coffee beans",
-            "Pouring coffee into the cup",
-            "Pouring some milk into the cup",
-            "Coffee is ready!"
+    private static final int COFFEE_ESPRESSO = 0;
+    private static final int COFFEE_LATTE = 1;
+    private static final int COFFEE_CAPPUCCINO = 2;
+    private static final int[][] INGREDIENTS_MATRIX = {
+            //  COST,   WATER,  MILK,   BEANS }
+            {   4,      250,    0,      16 },
+            {   7,      350,    75,     20 },
+            {   6,      200,    100,    12 }
     };
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        new CoffeeMachine(550, 400, 540, 120, 9);
+    }
 
-        System.out.println("Write how many ml of water the coffee machine has:");
-        int water = scanner.nextInt();
+    private final Scanner scanner;
+    private int money, water, milk, beans, cups;
 
-        System.out.println("Write how many ml of milk the coffee machine has:");
-        int milk = scanner.nextInt();
+    public CoffeeMachine(int money, int water, int milk, int beans, int cups) {
+        this.scanner = new Scanner(System.in);
+        this.money = money;
+        this.water = water;
+        this.milk = milk;
+        this.beans = beans;
+        this.cups = cups;
 
-        System.out.println("Write how many grams of coffee beans the coffee machine has:");
-        int beans = scanner.nextInt();
+        printInfo();
+        executeAsk();
+    }
 
-        System.out.println("Write how many cups of coffee you will need:");
-        int cups = scanner.nextInt();
+    protected void printInfo() {
+        System.out.println("The coffee machine has:");
+        System.out.format("%s of water\n", water);
+        System.out.format("%s of milk\n", milk);
+        System.out.format("%s of coffee beans\n", beans);
+        System.out.format("%s of disposable cups\n", cups);
+        System.out.format("%s of money\n\n", money); // weird phrasing, but I'll take it
+    }
 
-        int can = (int) water / 200;
-        can = Math.min(can, milk / 50);
-        can = Math.min(can, beans / 15);
-
-        if (can == cups) {
-            System.out.println("Yes, I can make that amount of coffee");
-        } else if (can > cups) {
-            System.out.format("Yes, I can make that amount of coffee (and even %s more than that)\n", can - cups);
-        } else {
-            System.out.format("No, I can make only %s cup(s) of coffee\n", can);
+    protected void executeAsk() {
+        System.out.println("Write action (buy, fill, take):");
+        String action = scanner.nextLine();
+        switch (action.toLowerCase()) {
+            case "buy":
+                executeBuy();
+                break;
+            case "fill":
+                executeFill();
+                break;
+            case "take":
+                executeTake();
+                break;
+            default:
+                System.out.println("Unknown action. Try again.");
+                executeAsk();
+                return;
         }
+        System.out.println();
+        printInfo();
+    }
+
+    protected void executeBuy() {
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+        int coffee = scanner.nextInt(); // We could also just take this - 1 and use that as the ID
+
+        if (coffee == 1) {
+            executeBuyCoffee(COFFEE_ESPRESSO, "Espresso");
+        } else if (coffee == 2) {
+            executeBuyCoffee(COFFEE_LATTE, "Latte");
+        } else if (coffee == 3) {
+            executeBuyCoffee(COFFEE_CAPPUCCINO, "Cappuccino");
+        } else {
+            System.out.println("Unknown coffee. Try again.");
+            executeBuy();
+        }
+    }
+
+    protected void executeBuyCoffee(int coffee, String name) {
+        int[] matrix = INGREDIENTS_MATRIX[coffee];
+
+        if (water < matrix[1] || milk < matrix[2] || beans < matrix[3] || cups < 1) {
+            System.out.println("Sorry, I am out of stock.");
+            return;
+        }
+        System.out.format("Making a %s...\n", name);
+
+        money += matrix[0];
+        water -= matrix[1];
+        milk -= matrix[2];
+        beans -= matrix[3];
+        cups--;
+    }
+
+    protected void executeFill() {
+        System.out.println("Write how many ml of water do you want to add:");
+        water += scanner.nextInt();
+
+        System.out.println("Write how many ml of milk do you want to add:");
+        milk += scanner.nextInt();
+
+        System.out.println("Write how many grams of coffee beans do you want to add:");
+        beans += scanner.nextInt();
+
+        System.out.println("Write how many disposable cups of coffee do you want to add:");
+        cups += scanner.nextInt();
+    }
+
+    protected void executeTake() {
+        System.out.format("I gave you $%s", money);
+        money = 0;
     }
 
 }
