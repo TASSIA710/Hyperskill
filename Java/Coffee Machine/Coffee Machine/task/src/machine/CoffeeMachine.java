@@ -29,7 +29,6 @@ public class CoffeeMachine {
         this.beans = beans;
         this.cups = cups;
 
-        printInfo();
         executeAsk();
     }
 
@@ -39,11 +38,11 @@ public class CoffeeMachine {
         System.out.format("%s of milk\n", milk);
         System.out.format("%s of coffee beans\n", beans);
         System.out.format("%s of disposable cups\n", cups);
-        System.out.format("%s of money\n\n", money); // weird phrasing, but I'll take it
+        System.out.format("%s of money\n", money); // weird phrasing, but I'll take it
     }
 
     protected void executeAsk() {
-        System.out.println("Write action (buy, fill, take):");
+        System.out.println("Write action (buy, fill, take, remaining, exit):");
         String action = scanner.nextLine();
         switch (action.toLowerCase()) {
             case "buy":
@@ -55,25 +54,32 @@ public class CoffeeMachine {
             case "take":
                 executeTake();
                 break;
+            case "remaining":
+                printInfo();
+                break;
+            case "exit":
+                return;
             default:
                 System.out.println("Unknown action. Try again.");
                 executeAsk();
                 return;
         }
         System.out.println();
-        printInfo();
+        executeAsk();
     }
 
     protected void executeBuy() {
-        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
-        int coffee = scanner.nextInt(); // We could also just take this - 1 and use that as the ID
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
+        String coffee = scanner.nextLine(); // We could also just take this - 1 and use that as the ID
 
-        if (coffee == 1) {
+        if (coffee.equals("1")) {
             executeBuyCoffee(COFFEE_ESPRESSO, "Espresso");
-        } else if (coffee == 2) {
+        } else if (coffee.equals("2")) {
             executeBuyCoffee(COFFEE_LATTE, "Latte");
-        } else if (coffee == 3) {
+        } else if (coffee.equals("3")) {
             executeBuyCoffee(COFFEE_CAPPUCCINO, "Cappuccino");
+        } else if (coffee.equalsIgnoreCase("back")) {
+            return;
         } else {
             System.out.println("Unknown coffee. Try again.");
             executeBuy();
