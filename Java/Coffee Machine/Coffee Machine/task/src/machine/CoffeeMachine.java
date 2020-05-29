@@ -1,5 +1,7 @@
 package machine;
 
+import java.util.Scanner;
+
 public class CoffeeMachine {
 
     private static final String[] STEPS = {
@@ -13,9 +15,18 @@ public class CoffeeMachine {
     };
 
     public static void main(String[] args) {
-        for (int i = 0; i < STEPS.length; i++) {
-            System.out.println(STEPS[i]);
-        }
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Write how many cups of coffee you will need: ");
+        int count = scanner.nextInt();
+        int water = count * 200;
+        int milk = count * 50;
+        int beans = count * 15;
+
+        System.out.format("For %s cups of coffee you will need:\n", count);
+        System.out.format("%s ml of water\n", water);
+        System.out.format("%s ml of milk\n", milk);
+        System.out.format("%s g of coffee beans\n", beans);
     }
 
 }
