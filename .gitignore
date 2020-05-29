@@ -10,4 +10,5 @@ gradlew.bat
 *.yaml
 *.html
 
+*Test.kt
 *Test.java
