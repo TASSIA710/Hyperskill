@@ -12,3 +12,8 @@ gradlew.bat
 
 *Test.kt
 *Test.java
+
+tests.py
+test_helper.py
+
+requirements.txt
