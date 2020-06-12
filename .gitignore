@@ -13,6 +13,7 @@ gradlew.bat
 *Test.kt
 *Test.java
 
+*.pyc
 tests.py
 test_helper.py
 
